@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+
+{% block main %}
+<div class="row">
+  <!-- Feed -->
+  <div class="col-9">
+    <font color="#68869b"> <h3>@{{ user.username }}</h3> </font>
+
+
+    {% if user.publicacion.all %}
+      <!-- por caca publicacion del usuario -->
+      {% for Publicacion in user.publicacion.all %}
+      	<!-- Muestro la publicacion -->
+        <div class="card" style="margin-bottom: 20px;">
+          <div class="card-body">
+            <font color="#68869b"> <h5 class="card-title">@{{ Publicacion.user.username}}</h5></font>
+            <p class="card-text"> {{ Publicacion.body }}</p>
+            <font color="#98b3bc" size="1"> <p class="card-text">{{ Publicacion.created_at }}</p></font>
+          </div>  
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No hay publicaciones!</p>
+    {% endif %}
+  </div>
+
+  <!-- Crear nueva publicacino, solo para probar ahora de agregar -->
+  <div class="col-3">
+    <h3>Crear nueva Publicacion</h3>
+		{% if form.errors %}
+			{% for field in form %}
+				{% for error in form.errors %}
+					<div class="alert alert-danger">
+						<b>{{ error|escape }}</b>
+					</div>
+				{% endfor %}
+			{% endfor %}
+			{% for error in form.non_field_errors %}
+				<div class="alert alert-danger">
+					<b>{{ error|escape }}</b>
+				</div>
+			{% endfor %}
+		{% endif %}
+
+		<form action="/{{ request.user.username }}/" method="post">
+			{% csrf_token %}
+
+			{% for field in form %}
+				<div class="form-group">
+					{{ field }}
+				</div>
+			{% endfor %}
+
+			<input type="hidden" value="{{ request.path }}" name="redirect">
+			<input type="submit" value="Publicar" class="btn btn-primary">
+		</form>
+  </div>
+</div>
+{% endblock %}

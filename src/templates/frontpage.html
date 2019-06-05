@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="row">
+  <div class="col-12">
+    <h1>Welcome to Tuiter</h1>
+  </div>
+</div>
+
+<hr>
+
+<div class="row">
+  <div class="col-6">
+    <h2>Log in</h2>
+
+    <!-- Para trabajar los errores -->
+    {% if signinform.errors %}
+      <!-- Error del field -->
+      {% for field in signinform %}
+        {% for error in field.errors %} 
+          <div class="alert alert-danger">
+            <b>{{ error|escape }}</b>
+          </div>
+        {% endfor %}
+      {% endfor %}
+      <!-- Error de espacio vacio -->
+      {% for error in signinform.non_field_errors %}
+        <div class="alert alert-danger">
+          <b>{{ error|escape }}</b>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- SIGN IN FORM -->
+    <form action="." method="post">
+      {% csrf_token %}
+
+      {% for field in signinform %}
+        <div class="form-group">
+          {{ field }}
+        </div>
+      {% endfor %}
+
+      <input type="submit" value="Sign in" name="signinform" class="btn btn-primary">
+    </form>
+  </div>
+
+  <div class="col-6">
+    <h3>Crear nueva cuenta</h3>
+
+    <!-- Errores de vacio -->
+    {% if signupform.non_field_errors %}
+      <div class="alert danger">
+        {{ signupform.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <!-- Errores de field-->
+    {% if signupform.errors %}
+      {% for field in signupform %}
+        {% for error in field.errors %}
+          <div class="alert alert-danger">
+            <b>{{ error|escape }}</b>
+          </div>
+        {% endfor %}
+      {% endfor %}
+      {% for error in signupform.non_field_errors %}
+        <div class="alert alert-danger">
+          <b>{{ error|escape }}</b>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <!-- SIGN UP FORM-->
+    <form action="." method="post">
+      {% csrf_token %}
+
+      {% for field in signupform %}
+        <div class="form-group">
+          {{ field }}
+        </div>
+      {% endfor %}
+
+      <input type="submit" value="Sign up" name="signupform" class="btn btn-primary">
+    </form>
+  </div>
+</div>
+{% endblock %}
