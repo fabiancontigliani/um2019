@@ -1,9 +1,11 @@
 from django.db import models
+
+# Create your models here.
+
 from django.contrib.auth.models import User
 
-class Publicacion(models.Model):
-	#la publicacion si o si tiene que tener el usuario que la creo 
-  user = models.ForeignKey(User, related_name='publicacion', on_delete=models.DO_NOTHING)
+class Djeet(models.Model):
+  user = models.ForeignKey(User, related_name='djeets', on_delete=models.DO_NOTHING)
   body = models.CharField(max_length=255)
   created_at = models.DateTimeField(auto_now_add=True)
 

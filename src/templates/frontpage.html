@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'templates/base.html' %}
 
 {% block main %}
 <div class="row">
   <div class="col-12">
-    <h1>Welcome to Tuiter</h1>
+    <h1>Bienvenido a Microblog</h1>
   </div>
 </div>
 
@@ -13,17 +13,14 @@
   <div class="col-6">
     <h2>Log in</h2>
 
-    <!-- Para trabajar los errores -->
     {% if signinform.errors %}
-      <!-- Error del field -->
       {% for field in signinform %}
-        {% for error in field.errors %} 
+        {% for error in field.errors %}
           <div class="alert alert-danger">
             <b>{{ error|escape }}</b>
           </div>
         {% endfor %}
       {% endfor %}
-      <!-- Error de espacio vacio -->
       {% for error in signinform.non_field_errors %}
         <div class="alert alert-danger">
           <b>{{ error|escape }}</b>
@@ -31,7 +28,6 @@
       {% endfor %}
     {% endif %}
 
-    <!-- SIGN IN FORM -->
     <form action="." method="post">
       {% csrf_token %}
 
@@ -46,16 +42,14 @@
   </div>
 
   <div class="col-6">
-    <h3>Crear nueva cuenta</h3>
+    <h3>Crear una nueva cuenta</h3>
 
-    <!-- Errores de vacio -->
     {% if signupform.non_field_errors %}
       <div class="alert danger">
         {{ signupform.non_field_errors }}
       </div>
     {% endif %}
 
-    <!-- Errores de field-->
     {% if signupform.errors %}
       {% for field in signupform %}
         {% for error in field.errors %}
@@ -71,7 +65,6 @@
       {% endfor %}
     {% endif %}
 
-    <!-- SIGN UP FORM-->
     <form action="." method="post">
       {% csrf_token %}
 

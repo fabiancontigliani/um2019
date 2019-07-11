@@ -1,60 +1,73 @@
-{% extends 'base.html' %}
-
+{% extends 'templates/base.html' %}
 
 {% block main %}
 <div class="row">
   <!-- Feed -->
   <div class="col-9">
-    <font color="#68869b"> <h3>@{{ user.username }}</h3> </font>
+    <h3>@{{ user.username }}</h3>
 
+    <hr> 
 
-    {% if user.publicacion.all %}
-      <!-- por caca publicacion del usuario -->
-      {% for Publicacion in user.publicacion.all %}
-      	<!-- Muestro la publicacion -->
+    <b><a href="/{{ user.username }}/follows/">Seguidos:</a></b> {{ user.microblprofile.follows.count }} - 
+    <b><a href="/{{ user.username }}/followers/">Seguidores:</a></b> {{ user.microblprofile.followed_by.count }} 
+
+    {% ifnotequal request.user user %}
+      <hr> 
+
+      {% if request.user.microblprofile in user.microblprofile.followed_by.all %} 
+        <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger">Dejar de seguir</a> 
+      {% else %} 
+        <a href="/{{ user.username }}/follow/" class="btn btn-success">Seguir</a> 
+      {% endif %} 
+    {% endifnotequal %}
+
+    <hr> 
+
+    {% if user.djeets.all %}
+      {% for djeet in user.djeets.all %}
         <div class="card" style="margin-bottom: 20px;">
           <div class="card-body">
-            <font color="#68869b"> <h5 class="card-title">@{{ Publicacion.user.username}}</h5></font>
-            <p class="card-text"> {{ Publicacion.body }}</p>
-            <font color="#98b3bc" size="1"> <p class="card-text">{{ Publicacion.created_at }}</p></font>
-          </div>  
+            <h5 class="card-title">@{{ djeet.user.username }}</h5>
+            <p class="card-text"><b>{{ djeet.created_at }}</b> - {{ djeet.body }}</p>
+          </div>
         </div>
       {% endfor %}
     {% else %}
-      <p>No hay publicaciones!</p>
+      <p>No hay pubicaciones aún!</p>
     {% endif %}
   </div>
 
-  <!-- Crear nueva publicacino, solo para probar ahora de agregar -->
+
+  <!-- Sidebar -->
   <div class="col-3">
-    <h3>Crear nueva Publicacion</h3>
-		{% if form.errors %}
-			{% for field in form %}
-				{% for error in form.errors %}
-					<div class="alert alert-danger">
-						<b>{{ error|escape }}</b>
-					</div>
-				{% endfor %}
-			{% endfor %}
-			{% for error in form.non_field_errors %}
-				<div class="alert alert-danger">
-					<b>{{ error|escape }}</b>
-				</div>
-			{% endfor %}
-		{% endif %}
+    <h3>Crear nueva publicación</h3>
+    {% if form.errors %}
+	{% for field in form %}
+		{% for error in form.errors %}
+			<div class="alert alert-danger">
+				<b>{{ error|escape }}</b>
+			</div>
+		{% endfor %}
+	{% endfor %}
+	{% for error in form.non_field_errors %}
+		<div class="alert alert-danger">
+			<b>{{ error|escape }}</b>
+		</div>
+	{% endfor %}
+{% endif %}
 
-		<form action="/{{ request.user.username }}/" method="post">
-			{% csrf_token %}
+<form action="/{{ request.user.username }}/" method="post">
+	{% csrf_token %}
 
-			{% for field in form %}
-				<div class="form-group">
-					{{ field }}
-				</div>
-			{% endfor %}
+	{% for field in form %}
+		<div class="form-group">
+			{{ field }}
+		</div>
+	{% endfor %}
 
-			<input type="hidden" value="{{ request.path }}" name="redirect">
-			<input type="submit" value="Publicar" class="btn btn-primary">
-		</form>
+	<input type="hidden" value="{{ request.path }}" name="redirect">
+	<input type="submit" value="Publicar" class="btn btn-primary">
+</form>
   </div>
 </div>
 {% endblock %}
